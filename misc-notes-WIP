@@ -1,0 +1,249 @@
+
+# the default umask is set in /etc/profile; 
+# for setting the umask for ssh logins, install and configure the libpam-umask package
+# umask 022
+
+# https://medium.com/@webprolific/getting-started-with-dotfiles-43c3602fd789
+# https://www.thegeekstuff.com/2008/09/bash-shell-ps1-10-examples-to-make-your-linux-prompt-like-angelina-jolie/
+# https://github.com/damianb/dotfiles
+# https://github.com/webpro/dotfiles
+# https://github.com/rootbeersoup/dotfiles
+
+
+
+## Colors?  Used for the prompt.
+# Regular text color
+	
+# darker colors
+	export BBLACK='\[\e[1;30m\]'
+	export DBLUE='\[\e[1;34m\]'
+	export DCYAN='\[\e[1;36m\]'
+	export DMAGENTA='\[\e[1;35m\]'
+	export DRED='\[\e[1;31m\]'
+	export DWHITE='\[\e[1;37m\]'
+	export DYELLOW='\[\e[1;33m\]'
+# normal colors
+	export BLACK='\[\e[0;30m\]'
+	export BLUE='\[\e[0;34m\]'
+	export CYAN='\[\e[0;36m\]'
+	export GREEN='\[\e[0;32m\]'
+	export MAGENTA='\[\e[0;35m\]'
+	export RED='\[\e[0;31m\]'
+	export WHITE='\[\e[0;37m\]'
+	export YELLOW='\[\e[0;33m\]'
+# background color
+	export BGBLACK='\[\e[40m\]'
+	export BGBLUE='\[\e[1;34m\]'
+	export BGCYAN='\[\e[1;36m\]'
+	export BGGREEN='\[\e[1;32m\]'
+	export BGMAGENTA='\[\e[1;35m\]'
+	export BGRED='\[\e[41m\]'
+	export BGREEN='\[\e[1;32m\]'
+	export BGWHITE='\[\e[1;37m\]'
+	export BGYELLOW='\[\e[1;33m\]'
+
+
+
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# Add some more custom software to PATH.
+PATH=$PATH:~/usr/bin
+export PATH
+
+# Make sure pkg-config can find self-compiled software
+# and libraries (installed to ~/usr)
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:~/usr/lib/pkgconfig
+export PKG_CONFIG_PATH
+
+# Add custom compiled libraries to library search path.
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/usr/lib
+export LD_LIBRARY_PATH
+
+# shell prompt format
+# test -n "$SSH_CLIENT" && PS1="$(hostname|cut -b 1-3)" || PS1=
+PS1="\[\e]0;\u@\h: \w\a\]\[\e]0;\u@\h: \w\a\]\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$"
+#PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
+#PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+#PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+
+# Git on prompt?
+HOST_PROMPT_="%{$fg_bold[red]%}@$HOST ➜ %{$fg_bold[cyan]%}%c "
+GIT_PROMPT="%{$fg_bold[blue]%}\$(git_prompt_info)%{$fg_bold[blue]%} % %{$reset_color%}"
+PROMPT="$HOST_PROMPT_$RUBY_PROMPT_$GIT_PROMPT"
+ZSH_THEME_GIT_PROMPT_PREFIX="git:(%{$fg[red]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
+
+
+# smile prompt
+function smile_prompt {
+	if [ "$?" -eq "0" ] 
+		then
+			SC="${GREEN}:)" #smiley 
+		else
+			SC="${RED}:(" #frowney
+	fi
+	if [ $UID -eq 0 ] 
+		then
+			UC="${RED}" #root user color
+		else
+			UC="${BWHITE}" #normal user color
+		fi
+	HC="${BYELLOW}" #hostname color
+	RC="${BWHITE}" #regular color
+	DF='\[\e[0m\]' #default color
+	PS1="[${UC}\u${RC}@${HC}\h ${RC}\W${DF}] ${SC}${DF} "
+}
+
+
+
+
+
+
+
+
+
+
+# enable bash completion in interactive shells
+# sudo apt install --reinstall bash-completion 
+if [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+fi 
+if [ "$PS1" ]; then
+    complete -cf sudo
+fi
+
+
+
+
+# TODO:
+    # source nanorc # https://github.com/scopatz/nanorc
+    # find /usr/share/nano/ -iname "*.nanorc" -exec echo include {} \; >> ~/.nanorc
+    #    /usr/share/nano/*.nanorc
+    #
+    #.bash_logout
+    #.bash_aliases
+    #.cache/
+    #.config/
+    #.local/
+    #.nano/
+    #.screenrc
+    #.selected_editor
+    #.ssh/
+    #.wget-hsts
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  _____         _ _             _             
+# |  _  |       | (_)           | |            
+# | | | |_ __ __| |_ _ __   __ _| |_ ___  _ __ 
+# | | | | '__/ _` | | '_ \ / _` | __/ _ \| '__|
+# \ \_/ / | | (_| | | | | | (_| | || (_) | |   
+#  \___/|_|  \__,_|_|_| |_|\__,_|\__\___/|_|   
+
+#     )                                       
+#  ( /(       (                     )         
+#  )\()) (    )\ ) (           ) ( /(    (    
+# ((_)\  )(  (()/( )\  (    ( /( )\())(  )(   
+#   ((_)(()\  ((_)|(_) )\ ) )(_)|_))/ )\(()\  
+#  / _ \ ((_) _| | (_)_(_/(((_)_| |_ ((_)((_) 
+# | (_) | '_/ _` | | | ' \)) _` |  _/ _ \ '_| 
+#  \___/|_| \__,_| |_|_||_|\__,_|\__\___/_|   
+
+#    ___         _ _             _             
+#   /___\_ __ __| (_)_ __   __ _| |_ ___  _ __ 
+#  //  // '__/ _` | | '_ \ / _` | __/ _ \| '__|
+# / \_//| | | (_| | | | | | (_| | || (_) | |   
+# \___/ |_|  \__,_|_|_| |_|\__,_|\__\___/|_|   
+
+#  _____            __                        __                   
+# /\  __`\         /\ \  __                  /\ \__                
+# \ \ \/\ \  _ __  \_\ \/\_\    ___      __  \ \ ,_\   ___   _ __  
+#  \ \ \ \ \/\`'__\/'_` \/\ \ /' _ `\  /'__`\ \ \ \/  / __`\/\`'__\
+#   \ \ \_\ \ \ \//\ \L\ \ \ \/\ \/\ \/\ \L\.\_\ \ \_/\ \L\ \ \ \/ 
+#    \ \_____\ \_\\ \___,_\ \_\ \_\ \_\ \__/.\_\\ \__\ \____/\ \_\ 
+#     \/_____/\/_/ \/__,_ /\/_/\/_/\/_/\/__/\/_/ \/__/\/___/  \/_/  
+
+
+
+
+
+
+
+
+# aliases
+#
+# https://gist.github.com/vitorbritto/8927171
+
+alias cd..="cd .." 
+alias du="du -h"
+alias df="df -h"
+
+alias ipconfig="ip address show"
+
+# [ -x /usr/bin/systemctl ] && sys="systemctl" # a symlink in /usr/bin works better to be honest
+# [ -x /usr/bin/htop ] && alias top=htop
+
+
+# easy extract, nabbed from reddit and cobbled more into it.
+# https://old.reddit.com/r/linuxquestions/comments/bshmu6/terminal_with_easy_access_to_frequently_used/eoniyce/
+# TODO: check if packages are installed and prompt accordingly
+# sudo apt install -y tar bzip2 unrar-free gzip unzip zip ncompress p7zip-full rzip cabextract arj lhasa xz-utils zoo lzop
+extract () {
+  if [ -f "$1" ] ; then
+    case "$1" in                          # packages needed (debian package name): 
+        *.tar.bz2)  tar xvjf "$1"      ;; # bzip2 tar
+        *.tar.gz)   tar xvzf "$1"      ;; # gzip tar
+        *.bz2)      bunzip2 "$1"       ;; # bzip2
+        *.rar)      unrar x "$1"       ;; # unrar-free
+		*.arc)      unrar x "$1"       ;; # unrar-free
+	    *.arc)      arj x "$1"         ;; # arj
+	    *.cab)      cabextract -f "$1" ;; #	cabextract
+        *.gz)       gunzip "$1"        ;; # gzip
+        *.lha)      lha x "$1"         ;; # lhasa
+        *.lzh)      lha x "$1"         ;; # lhasa
+        *.lzs)      lha x "$1"         ;; # lhasa
+		*.lzo       lzop -ev "$1"      ;; # lzop
+        *.pma)      lha x "$1"         ;; # lhasa
+        *.tar)      tar xvf "$1"       ;; # tar
+		*.xz)       unxz "$1"          ;; # xz-utils
+		*.tar.xz)   tar xJf "$1"       ;; # xz-utils tar	
+        *.tbz2)     tar xvjf "$1"      ;; # bzip2 tar
+		*.tbz)      tar xvjf "$1"      ;; # bzip2 tar
+        *.tgz)      tar xvzf "$1"      ;; # gzip tar
+        *.zip)      unzip "$1"         ;; # unzip
+        *.Z)        uncompress "$1"    ;; # ncompress
+        *.7z)       7z x "$1"          ;; # p7zip-full
+		*.zoo       zoo x/,// "$1"     ;; # zoo 
+		*.rz)       rzip -dv  "$1"     ;; # rzip 
+		*.rzip)     rzip -dv  "$1"     ;; # rzip 
+        *)          echo "don't know how to extract '$1'..." ;;
+    esac
+else
+    echo "'$1' is not a valid file!"
+fi
+}
+alias ex=extract
+
